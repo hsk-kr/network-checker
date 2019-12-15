@@ -53,8 +53,8 @@ export default class Home extends Component {
           <form className="sign-in-form col-10 col-sm-10 col-md-6 col-lg-6">
             <div className="sign-in-message-title">You need to sign in to use this service.</div>
             <div className="form-group">
-              <label htmlFor="inputId">ID</label>
-              <input type="text" className="form-control" id="inputId" placeholder="your ID" maxLength="20" />
+              <label htmlFor="inputId">Username</label>
+              <input type="text" className="form-control" id="inputUsername" placeholder="your ID" maxLength="20" />
             </div>
             <div className="form-group">
               <label htmlFor="inputPwd">Password</label>

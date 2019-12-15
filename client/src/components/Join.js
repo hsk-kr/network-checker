@@ -6,23 +6,23 @@ export default class Join extends Component {
   constructor(props) {
     super(props);
 
-    this.inputId = React.createRef();
+    this.inputUsername = React.createRef();
     this.inputPwd = React.createRef();
     this.inputRepwd = React.createRef();
 
     this.state = {
-      isIdValidated: false,
+      isUsernameValidated: false,
       isPwdValidated: false,
       isRepwdValidated: false
     };
   }
 
-  handleChangeId = (e) => {
-    const id = e.target.value;
-    let regex = /^[a-z0-9]{6,20}$/;
+  handleChangeUsername = (e) => {
+    const Username = e.target.value;
+    let regex = /^[a-z0-9]{4,20}$/;
 
     this.setState({
-      isIdValidated: regex.test(id)
+      isUsernameValidated: regex.test(Username)
     });
   }
 
@@ -42,18 +42,18 @@ export default class Join extends Component {
   }
 
   render() {
-    const { isIdValidated, isPwdValidated, isRepwdValidated } = this.state;
+    const { isUsernameValidated, isPwdValidated, isRepwdValidated } = this.state;
 
     return (
       <div className='sign-up-container row justify-content-center'>
         <form className='sign-up-form col-10 col-sm-10 col-md-6 col-lg-6'>
           <div className="sign-up-message-title text-center w-100">CREATE ACCOUNT</div>
           <div className="form-group">
-            <label htmlFor="id">ID</label>
-            <input type="text" ref={this.inputId} className={`form-control ${isIdValidated ? "is-valid" : "is-invalid"}`} id="id" maxLength="20" onChange={this.handleChangeId} />
+            <label htmlFor="Username">Username</label>
+            <input type="text" ref={this.inputUsername} className={`form-control ${isUsernameValidated ? "is-valid" : "is-invalid"}`} id="Username" maxLength="20" onChange={this.handleChangeUsername} />
 
-            <div className="valid-feedback">The ID has been Validated.</div>
-            <div className="invalid-feedback">Id must be composed of at least 6 letters (It can be small letter or number) and the maximum of length is 20.</div>
+            <div className="valid-feedback">The Username has been Validated.</div>
+            <div className="invalid-feedback">Username must be composed of at least 4 letters (It can be small letter or number) and the maximum of length is 20.</div>
           </div>
           <div className="form-group">
             <label htmlFor="pwd">Password</label>

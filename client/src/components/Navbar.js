@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 export class Navbar extends Component {
   constructor(props) {
@@ -22,11 +22,11 @@ export class Navbar extends Component {
 
         <div className="collapse navbar-collapse" id="navbarContent">
           <ul className="navbar-nav mr-auto">
-            <li className="nav-item active">
-              <Link className="nav-link" to="/">Home <span className="sr-only">(current)</span></Link>
+            <li className="nav-item">
+              <NavLink className="nav-link" exact activeClassName="active" to="/">Home</NavLink>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/service">Service</Link>
+              <NavLink className="nav-link" activeClassName="active" to="/service">Service</NavLink>
             </li>
           </ul>
           {isLoggedIn ?
