@@ -2,7 +2,14 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 module.exports = (req, res, next) => {
-  const authorization = req.header('Authorization').split(' ');
+  let authorization = req.header('Authorization');
+  if (authorization) {
+    authorization = authorization.split(' ');
+  } else {
+    return res.status(401).json({
+      message: 'Authorization failed'
+    });
+  }
 
   let token = null;
   if (authorization.length > 1) {
@@ -16,7 +23,7 @@ module.exports = (req, res, next) => {
           message: 'Authorization failed'
         });
       } else {
-        req.decoded = decoded;
+        req.user = decoded;
         next();
       }
     });

@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const User = require("../../db/models/User");
 const Token = require("../../routes/middlewares/token");
+require("dotenv").config();
 
 // validate login information.
 const validateUserInfo = (username, password) => {
@@ -12,7 +13,7 @@ const validateUserInfo = (username, password) => {
 };
 
 // create a user
-exports.createUser = (req, res) => {
+exports.joinUser = (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(400).json({
@@ -24,8 +25,7 @@ exports.createUser = (req, res) => {
     });
   }
 
-  const SALT_ROUNDS = 10;
-  bcrypt.hash(password, SALT_ROUNDS, (err, encrypted) => {
+  bcrypt.hash(password, process.env.NC_PASSWORD_SALT_ROUNDS, (err, encrypted) => {
     if (err) {
       console.error(err);
       return res.status(500).json({
@@ -103,6 +103,7 @@ exports.loginUser = (req, res) => {
       if (existingUser) {
         bcrypt.compare(password, existingUser.password, (err, result) => {
           if (err) {
+            console.error(err);
             return res.status(500).json({
               message: 'There is a problem in the server. please do try again later.'
             });
@@ -125,9 +126,122 @@ exports.loginUser = (req, res) => {
         });
       } else {
         res.status(401).json({
-          message: "User doesn't exists"
+          message: "User doesn't exist"
         });
       }
     }
   );
+};
+
+exports.getUser = (req, res) => {
+  if (!req.params.username) {
+    return res.status(400).json({
+      message: "Check the url"
+    });
+  }
+
+  User.findOne({
+    username: req.params.username
+  }, (err, user) => {
+    if (err) {
+      console.error(err);
+      return res.status(401).json({
+        message: "Not authorized"
+      });
+    } else if (!user) {
+      return res.status(404).json({
+        message: "doesn't exist"
+      });
+    }
+
+    return res.status(200).json({
+      message: "Success",
+      user
+    });
+  })
+};
+
+exports.createUser = (req, res) => {
+  if (!req.body.username || !req.body.password) {
+    return res.status(400).json({
+      message: "Check the url and parameters"
+    });
+  }
+
+  const newUser = new User(req.body);
+  newUser
+    .save()
+    .then((user) => {
+      res.status(201).json({
+        message: "OK",
+        user
+      })
+    })
+    .catch((e) => {
+      console.error(e);
+      res.status(500).json({
+        message: 'There is a problem in the server. please do try again later.'
+      });
+    });
+}
+
+exports.putUser = (req, res) => {
+  if (!req.params.id || !req.body.username || !req.body.password
+    || !req.body.isAdmin || !req.body.createdAt) {
+    return res.status(400).json({
+      message: "Check the url and parameters"
+    });
+  }
+
+  User.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true,
+      useFindAndModify: true
+    },
+    (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({
+          message: 'There is a problem in the server. please do try again later.'
+        });
+      } else if (!result) {
+        return res.status(401).json({
+          message: "This user doesn't exist"
+        });
+      }
+
+      return res.status(200).json({
+        message: "updated",
+        result
+      });
+    }
+  );
+};
+
+exports.deleteUser = (req, res) => {
+  if (!req.params.id) {
+    return res.status(400).json({
+      message: "Check the url"
+    });
+  }
+
+  User.findByIdAndDelete(req.params.id, (err, result) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({
+        message: 'There is a problem in the server. please do try again later.'
+      });
+    } else if (!result) {
+      return res.status(401).json({
+        message: "This user doesn't exist"
+      });
+    }
+
+    return res.status(200).json({
+      message: "deleted",
+      result
+    });
+  })
 };

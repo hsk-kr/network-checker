@@ -4,8 +4,8 @@ require("dotenv").config();
 
 module.exports = (req, res, next) => {
 
-  if (req.decoded && req.decoded.username) {
-    const { username } = req.decoded;
+  if (req.user && req.user.username) {
+    const { username } = req.user;
     User.findOne({ username }, (err, user) => {
       try {
         if (err || !user) {

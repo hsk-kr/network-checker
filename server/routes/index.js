@@ -2,14 +2,18 @@ const express = require("express");
 const router = express.Router();
 const User = require("./controllers/User");
 
-router.post("/user/signup", User.createUser);
-router.post("/user/signin", User.loginUser);
+router.post("/signup", User.joinUser);
+router.post("/signin", User.loginUser);
 
 // APIs for autorized users
 router.use(require("./middlewares/verifytoken"));
 
+
 // APIs for admin
 router.use(require("./middlewares/verifyadmin"));
-router.get("/test", (req, res) => res.send("hi"));
+router.get("/user/:id", User.getUser);
+router.put("/user/:id", User.putUser);
+router.delete("/user/:id", User.deleteUser);
+router.post("/user", User.createUser);
 
 module.exports = router;
