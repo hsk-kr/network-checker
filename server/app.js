@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
 require('dotenv').config();
@@ -9,6 +10,9 @@ const {
   NC_DB_PORT,
   NC_DB_NAME
 } = process.env;
+
+// allow cors
+app.use(cors());
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));

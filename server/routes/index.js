@@ -7,10 +7,11 @@ router.post("/signin", User.loginUser);
 
 // APIs for autorized users
 router.use(require("./middlewares/verifytoken"));
-
+router.get("/myuser", User.getMyUser);
 
 // APIs for admin
 router.use(require("./middlewares/verifyadmin"));
+router.get("/user", User.getUsers);
 router.get("/user/:id", User.getUser);
 router.put("/user/:id", User.putUser);
 router.delete("/user/:id", User.deleteUser);

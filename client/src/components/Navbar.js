@@ -2,16 +2,8 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 
 export class Navbar extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isLoggedIn: false
-    };
-  }
-
   render() {
-    const { isLoggedIn } = this.state;
+    const { token, deleteToken } = this.props;
 
     return (
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -28,10 +20,13 @@ export class Navbar extends Component {
             <li className="nav-item">
               <NavLink className="nav-link" activeClassName="active" to="/service">Service</NavLink>
             </li>
+            {token ? <li className="nav-item">
+              <NavLink className="nav-link" activeClassName="active" to="/myprofile">My Profile</NavLink>
+            </li> : null}
           </ul>
-          {isLoggedIn ?
+          {token ?
             <div className="form-inline my-2 my-lg-0">
-              <button className="btn btn-success my-2 my-sm-0" type="submit">Logout</button>
+              <button className="btn btn-success my-2 my-sm-0" type="button" onClick={() => deleteToken()}>Logout</button>
             </div> : null}
         </div>
       </nav>

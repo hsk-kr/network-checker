@@ -3,6 +3,7 @@ require("dotenv").config();
 
 module.exports = (req, res, next) => {
   let authorization = req.header('Authorization');
+
   if (authorization) {
     authorization = authorization.split(' ');
   } else {
@@ -23,7 +24,7 @@ module.exports = (req, res, next) => {
           message: 'Authorization failed'
         });
       } else {
-        req.user = decoded;
+        req.user = decoded.existingUser;
         next();
       }
     });

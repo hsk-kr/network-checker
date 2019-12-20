@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './Join.css';
+import axios from 'axios';
+import { API_URL } from '../constants';
 
 export default class Join extends Component {
 
@@ -13,7 +15,8 @@ export default class Join extends Component {
     this.state = {
       isUsernameValidated: false,
       isPwdValidated: false,
-      isRepwdValidated: false
+      isRepwdValidated: false,
+      isSubmmited: false
     };
   }
 
@@ -26,19 +29,70 @@ export default class Join extends Component {
     });
   }
 
-  handleChangePwd = (e) => {
-    const passwd = e.target.value;
+  handleChangePwd = () => {
+    const passwd = this.inputPwd.current.value;
     let regex = /^[\w!@#$%^&*()]{8,20}$/;
 
     this.setState({
       isPwdValidated: regex.test(passwd)
     });
+    this.handleChangeRepwd();
   }
 
   handleChangeRepwd = () => {
     this.setState({
       isRepwdValidated: this.inputPwd.current.value === this.inputRepwd.current.value
     });
+  }
+
+  submitSignUp = () => {
+    const {
+      isUsernameValidated,
+      isPwdValidated,
+      isRepwdValidated,
+      isSubmmited
+    } = this.state;
+
+    if (isSubmmited) {
+      alert("It's processing...");
+      return;
+    } else if (!isUsernameValidated || !isPwdValidated || !isRepwdValidated) {
+      alert('Please, check your account data');
+      return;
+    }
+
+    const apiUrl = `${API_URL}/signup`;
+
+    axios({
+      method: 'POST',
+      url: apiUrl,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        username: this.inputUsername.current.value,
+        password: this.inputPwd.current.value
+      }
+    })
+      .then((res) => {
+        this.setState({
+          isSubmmited: false
+        });
+
+        alert(res.data.message);
+        window.location.href = '/';
+      })
+      .catch(e => {
+        this.setState({
+          isSubmmited: false
+        });
+
+        if (e.response.data.message) {
+          alert(e.response.data.message);
+        } else {
+          alert(e);
+        }
+      });
   }
 
   render() {
@@ -64,13 +118,13 @@ export default class Join extends Component {
           </div>
           <div className="form-group">
             <label htmlFor="repwd">Re-enter Password</label>
-            <input type="password" ref={this.inputRepwd} className={`form-control ${isRepwdValidated ? "is-valid" : "is-invalid"}`} id="repwd" maxLength="20" onChange={this.handleChangeRepwd} />
+            <input type="password" ref={this.inputRepwd} className={`form-control ${isRepwdValidated ? "is-valid" : "is-invalid"}`} id="repwd" maxLength="20" onChange={this.handleChangePwd} />
 
             <div className="valid-feedback">GOOD!</div>
             <div className="invalid-feedback">The passwords supposed to be the same.</div>
           </div>
           <div className="form-group">
-            <button type="button" className="btn btn-success">Create Your Account</button>
+            <button type="button" className="btn btn-success" onClick={this.submitSignUp}>Create Your Account</button>
           </div>
         </form>
       </div>

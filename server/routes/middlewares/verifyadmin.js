@@ -4,9 +4,8 @@ require("dotenv").config();
 
 module.exports = (req, res, next) => {
 
-  if (req.user && req.user.username) {
-    const { username } = req.user;
-    User.findOne({ username }, (err, user) => {
+  if (req.user) {
+    User.findOneById(req.user._id, (err, user) => {
       try {
         if (err || !user) {
           throw new Error("db problem or doesn't exist");
@@ -17,7 +16,6 @@ module.exports = (req, res, next) => {
         } else {
           throw new Error("not admin");
         }
-
       } catch {
         return res.status(401).json({
           message: 'Authorization failed'

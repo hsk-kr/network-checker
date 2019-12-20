@@ -17,6 +17,7 @@
 ### Client
 
 - React (CRA based)
+- Redux
 - Bootstrap 4
 
 ### Server

@@ -1,5 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component, createRef } from 'react';
 import './Home.css';
+import axios from 'axios';
+import { API_URL } from '../constants';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAutoprefixer, faEtsy } from "@fortawesome/free-brands-svg-icons";
@@ -11,16 +13,63 @@ export default class Home extends Component {
     super(props);
 
     this.state = {
-      isLoggedIn: false
+      isSubmmited: false
     };
+
+    this.refUsername = createRef();
+    this.refPassword = createRef();
+  }
+
+  handleLogin = (e) => {
+    const { isLoggedIn } = this.state;
+
+    if (!isLoggedIn) {
+      e.preventDefault();
+
+      const username = this.refUsername.current.value;
+      const password = this.refPassword.current.value;
+
+      const apiUrl = `${API_URL}/signin`;
+
+      this.setState({
+        isSubmmited: true
+      });
+
+      axios({
+        method: 'POST',
+        url: apiUrl,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: {
+          username,
+          password
+        }
+      })
+        .then((res) => {
+          this.props.saveToken(res.data.token);
+          alert(res.data.message);
+        })
+        .catch((e) => {
+          this.setState({
+            isSubmmited: false
+          });
+
+          if (e.response.data.message) {
+            alert(e.response.data.message);
+          } else {
+            alert(e);
+          }
+        });
+    }
   }
 
   render() {
-    const { isLoggedIn } = this.state;
+    const { token } = this.props;
 
     let html = null;
 
-    if (isLoggedIn) {
+    if (token) {
       html = (
         <div className="home-container">
           <div className="home-intro-area text-white">
@@ -50,18 +99,18 @@ export default class Home extends Component {
     } else {
       html = (
         <div className="sign-in-container w-100 row justify-content-center">
-          <form className="sign-in-form col-10 col-sm-10 col-md-6 col-lg-6">
+          <form className="sign-in-form col-10 col-sm-10 col-md-6 col-lg-6" onSubmit={this.handleLogin}>
             <div className="sign-in-message-title">You need to sign in to use this service.</div>
             <div className="form-group">
               <label htmlFor="inputId">Username</label>
-              <input type="text" className="form-control" id="inputUsername" placeholder="your ID" maxLength="20" />
+              <input type="text" className="form-control" ref={this.refUsername} id="inputUsername" placeholder="your ID" maxLength="20" />
             </div>
             <div className="form-group">
               <label htmlFor="inputPwd">Password</label>
-              <input type="text" className="form-control" id="inputPwd" placeholder="your Password" maxLength="20" />
+              <input type="password" className="form-control" ref={this.refPassword} id="inputPwd" placeholder="your Password" maxLength="20" />
             </div>
             <div className="form-group">
-              <button type="button" className="btn btn-primary form-control">Sign In</button>
+              <button type="submit" className="btn btn-primary form-control">Sign In</button>
               <Link to="/join" className="btn btn-info form-control">Sign Up</Link>
             </div>
           </form>
