@@ -7,7 +7,9 @@ const userSchema = new Schema({
     required: true,
     trim: true,
     unique: true,
-    lowerCase: true
+    lowerCase: true,
+    minlength: 4,
+    maxlength: 20
   },
   isAdmin: {
     type: Boolean,
@@ -16,7 +18,9 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    required: true
+    required: true,
+    minlength: 4,
+    maxlength: 20
   },
   createdAt: {
     type: Date,

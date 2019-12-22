@@ -1,7 +1,6 @@
-const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const User = require("../../db/models/User");
-const Token = require("../../routes/middlewares/token");
+const Token = require("../middlewares/token");
 require("dotenv").config();
 
 const NC_PASSWORD_SALT_ROUNDS = parseInt(process.env.NC_PASSWORD_SALT_ROUNDS);
@@ -13,6 +12,10 @@ const validateUserInfo = (username, password) => {
 
   return regexUsername.test(username) && regexPassword.test(password);
 };
+
+/*
+  APIs for user
+*/
 
 // create a user
 exports.joinUser = (req, res) => {
@@ -44,7 +47,7 @@ exports.joinUser = (req, res) => {
 
       if (count > 0) {
         return res.status(401).json({
-          message: "The username exists"
+          message: "Username already exists"
         });
       }
 
@@ -129,7 +132,7 @@ exports.loginUser = (req, res) => {
 };
 
 exports.getMyUser = (req, res) => {
-  if (req.user) {
+  if (req.user && req.user._id) {
     User.findById(req.user._id, (err, user) => {
       if (err || !user) {
         return res.status(401).json({
@@ -149,6 +152,10 @@ exports.getMyUser = (req, res) => {
   }
 };
 
+/*
+  APIs for admin
+*/
+
 exports.getUser = (req, res) => {
   if (!req.params.id) {
     return res.status(400).json({
@@ -161,8 +168,8 @@ exports.getUser = (req, res) => {
     (err, user) => {
       if (err) {
         console.error(err);
-        return res.status(401).json({
-          message: "Not authorized"
+        return res.status(500).json({
+          message: "Server Error or invaild id"
         });
       } else if (!user) {
         return res.status(404).json({
