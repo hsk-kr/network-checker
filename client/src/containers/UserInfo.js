@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { fetchUser, deleteToken, saveToken } from '../redux';
-import localStorage from 'localStorage';
-import { LS_TOKEN } from '../constants';
+import { getToken } from '../helper';
 
+// This component manages token.
 const UserInfo = (props) => {
   const {
     token,
@@ -15,18 +15,25 @@ const UserInfo = (props) => {
   } = props;
 
   /* eslint-disable */
+  // It 
+  // When refresh the page, it calls fetchUser again.
+  // if the page lose the token, It fetches token from localstorage.
   useEffect(() => {
     if (!loading) {
-      if (userError) {
-        deleteToken();
-      } else if (token) {
+      if (token) {
         fetchUser(token);
-      } else {
-        const lsToken = localStorage.getItem(LS_TOKEN);
-        saveToken(lsToken);
+      } else if (!token && getToken()) {
+        saveToken(getToken());
       }
     }
   }, [token]);
+
+  // When token is expired or token is unauthoirized, It deletes token.
+  useEffect(() => {
+    if (userError && token) {
+      deleteToken();
+    }
+  }, [userError]);
   /* eslint-enable */
 
   return <></>;
@@ -35,7 +42,6 @@ const UserInfo = (props) => {
 const mapStateToProps = (state) => ({
   token: state.token.token,
   loading: state.user.loading,
-  user: state.user.user,
   userError: state.user.error
 });
 

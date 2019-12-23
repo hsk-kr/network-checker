@@ -2,13 +2,21 @@
 
 네트워크 상태를 주기적으로 확인 해주는 서비스 입니다. Restful API 서버 포트폴리오 목적으로 제작되었습니다.
 
-## How To Use
+## How To run
 
-### Debug
+### Client
 
 - 미완성
 
-### Build
+### Server
+
+- 미완성
+
+### Checker
+
+- 미완성
+
+### Database
 
 - 미완성
 

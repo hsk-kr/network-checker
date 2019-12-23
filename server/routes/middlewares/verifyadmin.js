@@ -1,11 +1,10 @@
-// const jwt = require("jsonwebtoken");
 const User = require("../../db/models/User");
 require("dotenv").config();
 
 module.exports = (req, res, next) => {
 
   if (req.user) {
-    User.findOneById(req.user._id, (err, user) => {
+    User.findById(req.user._id, (err, user) => {
       try {
         if (err || !user) {
           throw new Error("db problem or doesn't exist");

@@ -100,10 +100,16 @@ exports.updateMyCheckInformation = (req, res) => {
         user_id: new ObjectId(user_id)
       },
       {
-        alias,
-        address,
-        port,
-        updatedAt: Date.now()
+        $set: {
+          alias,
+          address,
+          port,
+          state: false,
+          updatedAt: Date.now()
+        },
+        $unset: {
+          lastCheckedAt: null
+        }
       },
       (err, result) => {
         if (err) {

@@ -21,47 +21,43 @@ export default class Home extends Component {
   }
 
   handleLogin = (e) => {
-    const { isLoggedIn } = this.state;
+    e.preventDefault();
 
-    if (!isLoggedIn) {
-      e.preventDefault();
+    const username = this.refUsername.current.value;
+    const password = this.refPassword.current.value;
 
-      const username = this.refUsername.current.value;
-      const password = this.refPassword.current.value;
+    const apiUrl = `${API_URL}/signin`;
 
-      const apiUrl = `${API_URL}/signin`;
+    this.setState({
+      isSubmmited: true
+    });
 
-      this.setState({
-        isSubmmited: true
-      });
-
-      axios({
-        method: 'POST',
-        url: apiUrl,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        data: {
-          username,
-          password
-        }
+    axios({
+      method: 'POST',
+      url: apiUrl,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: {
+        username,
+        password
+      }
+    })
+      .then((res) => {
+        this.props.saveToken(res.data.token);
+        alert(res.data.message);
       })
-        .then((res) => {
-          this.props.saveToken(res.data.token);
-          alert(res.data.message);
-        })
-        .catch((e) => {
-          this.setState({
-            isSubmmited: false
-          });
-
-          if (e.response.data.message) {
-            alert(e.response.data.message);
-          } else {
-            alert(e);
-          }
+      .catch((e) => {
+        this.setState({
+          isSubmmited: false
         });
-    }
+
+        if (e.response.data.message) {
+          alert(e.response.data.message);
+        } else {
+          alert(e);
+        }
+      });
   }
 
   render() {

@@ -16,7 +16,7 @@ export const saveToken = (token) => {
 };
 
 export const deleteToken = () => {
-  localStorage.setItem(LS_TOKEN, '');
+  localStorage.removeItem(LS_TOKEN);
 
   return {
     type: TOKEN_DELETE

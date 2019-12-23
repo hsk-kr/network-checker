@@ -10,13 +10,13 @@ const checkInformation = new Schema({
     type: String,
     required: true,
     trim: true,
-    maxlength: 50
+    maxlength: 100
   },
   address: {
     type: String,
     required: true,
     trim: true,
-    maxlength: 50
+    maxlength: 100
   },
   port: {
     type: Number,
