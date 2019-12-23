@@ -8,7 +8,13 @@ router.post("/signin", user.loginUser);
 
 // APIs for autorized users
 router.use(require("./middlewares/verifytoken"));
+
+// User
 router.get("/myuser", user.getMyUser);
+router.delete("/myuser", user.deleteMyAccount);
+router.patch("/myuser/password", user.changePassword);
+
+// CheckInformation
 router.get("/mychkinfo", chkinfo.getMyCheckInformation);
 router.post("/mychkinfo", chkinfo.createMyCheckInformation);
 router.put("/mychkinfo/:id", chkinfo.updateMyCheckInformation);

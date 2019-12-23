@@ -11,7 +11,7 @@ import Navbar from './containers/Navbar';
 import Home from "./containers/Home";
 import Service from './containers/Service';
 import Join from './components/Join';
-import MyProfile from './components/MyProfile';
+import MyProfile from './containers/MyProfile';
 import UserInfo from './containers/UserInfo';
 
 function App() {

@@ -1,6 +1,6 @@
-import React, { Component } from 'react'
-import './Service.css'
-import { Redirect } from 'react-router-dom'
+import React, { Component } from 'react';
+import './Service.css';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import CheckInformation from './CheckInformation';
 import { getToken } from '../helper';

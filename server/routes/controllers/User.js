@@ -1,3 +1,4 @@
+const { ObjectId } = require("mongoose").Types;
 const bcrypt = require("bcrypt");
 const User = require("../../db/models/User");
 const Token = require("../middlewares/token");
@@ -8,26 +9,125 @@ const NC_PASSWORD_SALT_ROUNDS = parseInt(process.env.NC_PASSWORD_SALT_ROUNDS);
 // validate login information.
 const validateUserInfo = (username, password) => {
   const regexUsername = /^[a-z0-9]{4,20}$/;
+
+  return regexUsername.test(username) && validatePassword(password);
+};
+
+const validatePassword = (password) => {
   const regexPassword = /^[\w!@#$%^&*()]{8,20}$/;
 
-  return regexUsername.test(username) && regexPassword.test(password);
+  return regexPassword.test(password);
 };
 
 /*
   APIs for user
 */
 
+exports.changePassword = (req, res) => {
+  const { password, newPassword } = req.body;
+
+  // check parameters
+  if (!req.user) {
+    return res.status(401).json({
+      message: "Not authorized"
+    });
+  } else if (
+    !password || !newPassword ||
+    !validatePassword(password) || !validatePassword(newPassword)
+  ) {
+    return res.status(400).json({
+      message: "Please, check your password or new password."
+    });
+  }
+
+  // find user by token.
+  User.findById(req.user._id, (err, user) => {
+    if (err || !user) {
+      return res.status(401).json({
+        message: "Not authorized"
+      });
+    }
+
+    // compare password and user's real password
+    bcrypt.compare(password, user.password, (err, same) => {
+      if (err || !same) {
+        return res.status(400).json({
+          message: 'incorrect password'
+        });
+      }
+
+      // hash new password
+      bcrypt.hash(newPassword, NC_PASSWORD_SALT_ROUNDS, (err, encrypted) => {
+        if (err) {
+          return res.status(500).json({
+            message: 'Server Error'
+          });
+        }
+
+        // update the user
+        User.updateOne(
+          {
+            _id: ObjectId(user._id)
+          },
+          {
+            $set: {
+              password: encrypted
+            }
+          },
+          (err) => {
+            if (err) {
+              return res.status(500).json({
+                message: 'Server Error'
+              });
+            }
+
+            return res.status(200).json({
+              message: 'Success'
+            });
+          }
+        );
+      });
+    });
+  });
+}
+
+exports.deleteMyAccount = (req, res) => {
+  if (!req.user || !req.user._id) {
+    return res.status(401).json({
+      message: "Not authorized"
+    });
+  }
+
+  User.deleteOne({
+    _id: ObjectId(req.user._id)
+  }, (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({
+        message: 'Server Error'
+      });
+    }
+
+    return res.status(200).json({
+      message: 'Success'
+    });
+  });
+}
+
 // create a user
 exports.joinUser = (req, res) => {
   const { username, password } = req.body;
 
+  // validate parameters
   if ((!username || !password) || !validateUserInfo(username, password)) {
     return res.status(400).json({
       message: "Please, check your account data"
     });
   }
 
+  // hash password
   bcrypt.hash(password, NC_PASSWORD_SALT_ROUNDS, (err, encrypted) => {
+    // if there is error
     if (err) {
       console.error(err);
       return res.status(500).json({
@@ -35,6 +135,7 @@ exports.joinUser = (req, res) => {
       });
     }
 
+    // check if there is the user or not.
     return User.countDocuments({
       username: username
     }, (err, count) => {
@@ -45,18 +146,20 @@ exports.joinUser = (req, res) => {
         });
       }
 
+      // if there is a user. 
       if (count > 0) {
         return res.status(401).json({
           message: "Username already exists"
         });
       }
 
+      // create a user by User model.
       const user = new User({
         username,
         password: encrypted
       });
 
-      return user
+      user
         .save()
         .then((newUser) => {
           newUser.password = null;
@@ -82,12 +185,14 @@ exports.joinUser = (req, res) => {
 exports.loginUser = (req, res) => {
   const { username, password } = req.body;
 
+  // validate parameters
   if ((!username || !password) || !validateUserInfo(username, password)) {
     return res.status(400).json({
       message: "Please, check your login data"
     });
   }
 
+  // find user by username.
   User.findOne(
     { username },
     (err, existingUser) => {
@@ -99,6 +204,7 @@ exports.loginUser = (req, res) => {
       }
 
       if (existingUser) {
+        // compare password of parameter and user's real password.
         bcrypt.compare(password, existingUser.password, (err, result) => {
           if (err) {
             console.error(err);
@@ -107,9 +213,10 @@ exports.loginUser = (req, res) => {
             });
           }
 
+          // if they're same.
           if (result) {
-            existingUser.password = null;
-            const token = Token({ existingUser });
+            existingUser.password = null; // It prevents encrypted password to user.
+            const token = Token({ existingUser }); // create Token
 
             res.status(201).json({
               message: "User successfully signed in",
@@ -118,13 +225,13 @@ exports.loginUser = (req, res) => {
             });
           } else {
             return res.status(401).json({
-              message: "User doesn't exist"
+              message: "Password incorrect"
             });
           }
         });
       } else {
         res.status(401).json({
-          message: "Password incorrect"
+          message: "User doesn't exist"
         });
       }
     }
@@ -132,6 +239,7 @@ exports.loginUser = (req, res) => {
 };
 
 exports.getMyUser = (req, res) => {
+  // If user is logged in.
   if (req.user && req.user._id) {
     User.findById(req.user._id, (err, user) => {
       if (err || !user) {
