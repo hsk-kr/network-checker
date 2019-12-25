@@ -183,26 +183,85 @@ exports.getOneCheckInformation = (req, res) => {
         });
       }
 
-      return res.status(200).json({
-        message: "Success",
-        checkInformation
-      });
+      return res.status(200).json(checkInformation);
     });
 };
 
 exports.getCheckInformation = (req, res) => {
-  CheckInformation.find((err, checkInformation) => {
+  CheckInformation.countDocuments((err, count) => {
     if (err) {
       console.error(err);
-      return res.status(401).json({
-        message: "Not authorized"
+      return res.status(500).json({
+        message: 'There is a problem in the server. please do try again later.'
       });
     }
 
-    return res.status(200).json({
-      message: "Success",
-      checkInformation
-    });
+    let { start, end, sort, order, filter } = req.query;
+    let findOptions = {};
+    if (!start) {
+      start = 0;
+    }
+    if (!end) {
+      end = count;
+    }
+    if (!sort) {
+      sort = "_id";
+    }
+    if (!order) {
+      order = "ASC";
+    }
+    if (filter) {
+      try {
+        const filterOptions = JSON.parse(filter);
+        if (filterOptions.q) {
+          findOptions = {
+            ...findOptions,
+            $or: [
+              {
+                alias: new RegExp(filterOptions.q, "gi")
+              },
+              {
+                address: new RegExp(filterOptions.q, "gi")
+              }
+            ]
+          };
+
+          if (!isNaN(filterOptions.q)) {
+            findOptions = {
+              ...findOptions,
+              $or: [
+                ...findOptions.$or,
+                {
+                  port: filterOptions.q
+                }
+              ]
+            };
+          }
+        }
+      } catch (e) {
+        findOptions = {};
+      }
+    }
+    order = order === 'ASC' ? 1 : -1;
+
+    res.set('Access-Control-Expose-Headers', 'X-Total-Count');
+    res.set('X-Total-Count', count);
+
+    CheckInformation
+      .find(findOptions)
+      .sort({ [sort]: order })
+      .skip(Number(start))
+      .limit(Number(end) - Number(start))
+      .exec((err, checkInformation) => {
+        if (err) {
+          console.error(err);
+          return res.status(401).json({
+            message: "Not authorized"
+          });
+        }
+
+        return res.status(200).json(checkInformation);
+      });
   });
 };
 
@@ -220,10 +279,7 @@ exports.createCheckInformation = (req, res) => {
   newCheckInformation
     .save()
     .then((checkInformation) => {
-      res.status(201).json({
-        message: "OK",
-        checkInformation
-      })
+      res.status(201).json(checkInformation)
     })
     .catch((e) => {
       console.error(e);
@@ -237,8 +293,8 @@ exports.putCheckInformation = (req, res) => {
   if (
     !req.params.id || !req.body.user_id ||
     !req.body.alias || !req.body.address ||
-    !req.body.port || !req.body.state ||
-    !req.body.updatedAt || !req.body.createdAt
+    !req.body.port || !req.body.updatedAt ||
+    !req.body.createdAt
   ) {
     return res.status(400).json({
       message: "Check the url and parameters"
@@ -264,10 +320,7 @@ exports.putCheckInformation = (req, res) => {
         });
       }
 
-      return res.status(200).json({
-        message: "updated",
-        result
-      });
+      return res.status(200).json(result);
     }
   );
 };
@@ -291,9 +344,6 @@ exports.deleteCheckInformation = (req, res) => {
       });
     }
 
-    return res.status(200).json({
-      message: "deleted",
-      result
-    });
+    return res.status(200).json(result);
   })
 };

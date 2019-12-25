@@ -285,26 +285,67 @@ exports.getUser = (req, res) => {
         });
       }
 
-      return res.status(200).json({
-        message: "Success",
-        user
-      });
+      return res.status(200).json(user);
     });
 };
 
 exports.getUsers = (req, res) => {
-  User.find((err, users) => {
-    if (err) {
-      console.error(err);
-      return res.status(401).json({
-        message: "Not authorized"
-      });
-    }
+  User.countDocuments((err, count) => {
 
-    return res.status(200).json({
-      message: "Success",
-      users
-    });
+    let { start, end, sort, order, filter } = req.query;
+    let findOptions = {};
+    if (!start) {
+      start = 0;
+    }
+    if (!end) {
+      end = count;
+    }
+    if (!sort) {
+      sort = "_id";
+    }
+    if (!order) {
+      order = "ASC";
+    }
+    if (filter) {
+      try {
+        const filterOptions = JSON.parse(filter);
+        if (filterOptions.q) {
+          findOptions = {
+            ...findOptions,
+            $or: [
+              {
+                username: new RegExp(filterOptions.q, "gi")
+              },
+              {
+                password: new RegExp(filterOptions.q, "gi")
+              }
+            ]
+          };
+        }
+      } catch (e) {
+        findOptions = {};
+      }
+    }
+    order = order === 'ASC' ? 1 : -1;
+
+    res.set('Access-Control-Expose-Headers', 'X-Total-Count');
+    res.set('X-Total-Count', count);
+
+    User
+      .find(findOptions)
+      .sort({ [sort]: order })
+      .skip(Number(start))
+      .limit(Number(end) - Number(start))
+      .exec((err, users) => {
+        if (err) {
+          console.error(err);
+          return res.status(401).json({
+            message: "Not authorized"
+          });
+        }
+
+        return res.status(200).json(users);
+      });
   });
 };
 
@@ -319,10 +360,7 @@ exports.createUser = (req, res) => {
   newUser
     .save()
     .then((user) => {
-      res.status(201).json({
-        message: "OK",
-        user
-      })
+      res.status(201).json(user)
     })
     .catch((e) => {
       console.error(e);
@@ -359,10 +397,7 @@ exports.putUser = (req, res) => {
         });
       }
 
-      return res.status(200).json({
-        message: "updated",
-        result
-      });
+      return res.status(200).json(result);
     }
   );
 };
@@ -386,9 +421,6 @@ exports.deleteUser = (req, res) => {
       });
     }
 
-    return res.status(200).json({
-      message: "deleted",
-      result
-    });
+    return res.status(200).json(result);
   })
 };
