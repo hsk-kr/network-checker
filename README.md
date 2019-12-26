@@ -6,19 +6,68 @@
 
 ### Client
 
-- 미완성
+1. Move to client directory.
+    ```
+    cd client
+    ```
+2. Install packages
+    ```
+    npm install
+    ```
+3. Run
+    ```
+    npm run start
+    ```
+
+### Admin Page
+
+1. Move to admin-page directory.
+    ```
+    cd client
+    ```
+2. Install packages
+    ```
+    npm install
+    ```
+3. Run
+    ```
+    npm run start
+    ```
 
 ### Server
 
-- 미완성
+1. Move to server directory.
+    ```
+    cd server
+    ```
+2. Install packages
+    ```
+    npm install
+    ```
+3. Run
+    ```
+    npm run start
+    ```
 
 ### Checker
 
-- 미완성
+1. Move to a client directory.
+    ```
+    cd checker
+    ```
+2. Install packages
+    ```
+    npm install
+    ```
+3. Run
+    ```
+    npm run start [socket-count | timeout | delay]
+    ```
 
-### Database
-
-- 미완성
+* Command Options
+    - socket-count : Count of sockets that to use to connect at a one time.
+    - timeout : Timeout
+    - delay : How long wait after checking all of check information.
 
 ## Skill Stacks
 
@@ -28,9 +77,14 @@
 - Redux
 - Bootstrap 4
 
+### Admin Page
+
+- react-admin (https://github.com/marmelab/react-admin)
+
 ### Server
 
 - Node.js (Express.js)
+- Mongoose
 
 ### Checker
 
