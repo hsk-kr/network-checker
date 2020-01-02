@@ -224,7 +224,7 @@ export class Service extends Component {
               {
                 chkinfoList.map((v, i) => {
                   return <CheckInformation
-                    key={i}
+                    key={v._id}
                     alias={v.alias}
                     address={v.address}
                     port={v.port}
