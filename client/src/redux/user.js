@@ -8,64 +8,64 @@ const USER_FETCH_FAILURE = 'USER_FETCH_FAILURE';
 
 // actions
 const fetchUserRequest = () => ({
-  type: USER_FETCH_REQUEST
+  type: USER_FETCH_REQUEST,
 });
 
-const fetchUserSuccess = (user) => ({
+const fetchUserSuccess = user => ({
   type: USER_FETCH_SUCCESS,
-  payload: user
+  payload: user,
 });
 
-const fetchUserFailure = (error) => ({
+const fetchUserFailure = error => ({
   type: USER_FETCH_FAILURE,
-  payload: error
+  payload: error,
 });
 
-export const fetchUser = (token) => {
-  return (dispatch) => {
+export const fetchUser = token => {
+  return dispatch => {
     dispatch(fetchUserRequest());
 
     axios
       .get(`${API_URL}/myuser`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       })
-      .then((res) => {
-        dispatch(fetchUserSuccess(res.data.user));
+      .then(res => {
+        dispatch(fetchUserSuccess(res.data));
       })
-      .catch((e) => {
+      .catch(e => {
         dispatch(fetchUserFailure(e.response.data));
       });
   };
-}
+};
 
 // reducer
 const initialState = {
   loading: false,
   user: {},
-  error: ''
+  error: '',
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case USER_FETCH_REQUEST:
       return {
-        loading: true
+        loading: true,
       };
     case USER_FETCH_SUCCESS:
       return {
         loading: false,
-        user: action.payload
+        user: action.payload,
       };
     case USER_FETCH_FAILURE:
       return {
         loading: false,
-        error: action.payload
+        error: action.payload,
       };
     default:
       return state;
   }
-}
+};
 
 export default reducer;

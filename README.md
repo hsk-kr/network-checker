@@ -1,8 +1,8 @@
 # Network Checker
 
-네트워크 상태를 주기적으로 확인 해주는 서비스 입니다. Restful API 서버 포트폴리오 목적으로 제작되었습니다.
-
 ## How To run
+
+#### Only development
 
 ### Client
 
@@ -65,15 +65,15 @@
     ```
 
 * Command Options
-    - socket-count : Count of sockets that to use to connect at a one time.
+    - socket-count : How many sockets you use
     - timeout : Timeout
-    - delay : How long wait after checking all of check information.
+    - delay : Interval
 
 ## Skill Stacks
 
 ### Client
 
-- React (CRA based)
+- React
 - Redux
 - Bootstrap 4
 
@@ -83,7 +83,7 @@
 
 ### Server
 
-- Node.js (Express.js)
+- Express
 - Mongoose
 
 ### Checker

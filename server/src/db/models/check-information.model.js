@@ -1,45 +1,44 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose, { Schema } from 'mongoose';
 
 const checkInformation = new Schema({
   user_id: {
     type: Schema.Types.ObjectId,
-    required: true
+    required: true,
   },
   alias: {
     type: String,
     required: true,
     trim: true,
-    maxlength: 100
+    maxlength: 100,
   },
   address: {
     type: String,
     required: true,
     trim: true,
-    maxlength: 100
+    maxlength: 100,
   },
   port: {
     type: Number,
     required: true,
     min: 0,
-    max: 65535
+    max: 65535,
   },
   state: {
     type: Boolean,
-    default: false
+    default: false,
   },
   lastCheckedAt: {
     type: Date,
-    default: null
+    default: null,
   },
   updatedAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-module.exports = mongoose.model('checkInformation', checkInformation);
+export default mongoose.model('checkInformation', checkInformation);

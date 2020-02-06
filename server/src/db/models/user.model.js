@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose, { Schema } from 'mongoose';
 
 const userSchema = new Schema({
   username: {
@@ -9,21 +8,21 @@ const userSchema = new Schema({
     unique: true,
     lowerCase: true,
     minlength: 4,
-    maxlength: 20
+    maxlength: 20,
   },
   isAdmin: {
     type: Boolean,
     required: true,
-    default: false
+    default: false,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-module.exports = mongoose.model('User', userSchema);
+export default mongoose.model('User', userSchema);

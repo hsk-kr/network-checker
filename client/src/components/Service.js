@@ -14,7 +14,7 @@ export class Service extends Component {
       isSubmitted: false,
       alias: '',
       address: '',
-      port: ''
+      port: '',
     };
   }
 
@@ -40,10 +40,10 @@ export class Service extends Component {
     }
 
     return true;
-  }
+  };
 
   // Submit checking form.
-  submitAddingCheckInfo = (e) => {
+  submitAddingCheckInfo = e => {
     e.preventDefault();
     const { isSubmitted, alias, address, port } = this.state;
     const token = this.props.token || getToken();
@@ -59,7 +59,7 @@ export class Service extends Component {
     }
 
     this.setState({
-      isSubmitted: true
+      isSubmitted: true,
     });
 
     axios
@@ -68,19 +68,19 @@ export class Service extends Component {
         {
           alias,
           address,
-          port
+          port,
         },
         {
           headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
         }
       )
       .then(() => {
         alert('Added the check information');
       })
-      .catch((e) => {
+      .catch(e => {
         if (e.response.data.message) {
           alert(e.response.data.message);
         } else {
@@ -91,7 +91,7 @@ export class Service extends Component {
         this.getCheckInfoList();
         this.setState({ isSubmitted: false });
       });
-  }
+  };
 
   // get my check information list from API.
   getCheckInfoList = () => {
@@ -100,17 +100,15 @@ export class Service extends Component {
 
     if (token) {
       axios
-        .get(
-          `${API_URL}/mychkinfo`,
-          {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
-          }
-        )
-        .then((res) => {
+        .get(`${API_URL}/mychkinfo`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(res => {
+          console.log(res.data);
           this.setState({
-            chkinfoList: res.data.checkInformation
+            chkinfoList: res.data,
           });
         });
     }
@@ -126,29 +124,30 @@ export class Service extends Component {
       return;
     }
 
-    axios.delete(`${API_URL}/mychkinfo/${deleteCheckInfoId}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
+    axios
+      .delete(`${API_URL}/mychkinfo/${deleteCheckInfoId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .finally(() => {
         this.getCheckInfoList();
       });
-  }
+  };
 
-  // select check information for deleting. 
+  // select check information for deleting.
   // It's used for callback function of CheckInfomration component.
-  selectDeleteCheckInfo = (_id) => {
+  selectDeleteCheckInfo = _id => {
     return () => {
       this.setState({
-        deleteCheckInfoId: _id
+        deleteCheckInfoId: _id,
       });
-    }
-  }
+    };
+  };
 
   // It returns request successfully otherwise returns false.
   // It's used for callback function of CheckIfnormation component.
-  submitEditCheckInfo = (_id) => {
+  submitEditCheckInfo = _id => {
     return (alias, address, port) => {
       if (!this.validateCheckingForm(alias, address, port)) {
         return false;
@@ -161,16 +160,17 @@ export class Service extends Component {
         url: `${API_URL}/mychkinfo/${_id}`,
         method: 'PUT',
         data: {
-          alias, address, port
+          alias,
+          address,
+          port,
         },
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      })
-        .finally(() => {
-          this.getCheckInfoList();
-        });
+          Authorization: `Bearer ${token}`,
+        },
+      }).finally(() => {
+        this.getCheckInfoList();
+      });
 
       return true;
     };
@@ -185,45 +185,83 @@ export class Service extends Component {
     const { chkinfoList } = this.state;
 
     if (!token && !getToken()) {
-      return <Redirect to='/' />
+      return <Redirect to="/" />;
     }
 
     return (
-      <div className='service-container row justify-content-center'>
-        <div className='col-10 col-sm-10 col-md-10 col-lg-10'>
+      <div className="service-container row justify-content-center">
+        <div className="col-10 col-sm-10 col-md-10 col-lg-10">
           <form onSubmit={this.submitAddingCheckInfo}>
-            <div className='service-title'>CHECKING FORM</div>
+            <div className="service-title">CHECKING FORM</div>
             <hr />
             <div className="form-group row">
-              <label htmlFor="alias" className="col-sm-2 col-form-label col-form-label-sm">ALIAS</label>
+              <label
+                htmlFor="alias"
+                className="col-sm-2 col-form-label col-form-label-sm"
+              >
+                ALIAS
+              </label>
               <div className="col-sm-10">
-                <input type="text" className="form-control form-control-sm" id="alias" placeholder="MY SERVER" value={this.state.alias} onChange={(e) => this.setState({ alias: e.target.value })} />
+                <input
+                  type="text"
+                  className="form-control form-control-sm"
+                  id="alias"
+                  placeholder="MY SERVER"
+                  value={this.state.alias}
+                  onChange={e => this.setState({ alias: e.target.value })}
+                />
               </div>
             </div>
             <div className="form-group row">
-              <label htmlFor="address" className="col-sm-2 col-form-label col-form-label-sm">IP ADDRESS (OR DOMAIN)</label>
+              <label
+                htmlFor="address"
+                className="col-sm-2 col-form-label col-form-label-sm"
+              >
+                IP ADDRESS (OR DOMAIN)
+              </label>
               <div className="col-sm-10">
-                <input type="text" className="form-control form-control-sm" id="address" placeholder="192.168.168.1 | www.naver.com" value={this.state.address} onChange={(e) => this.setState({ address: e.target.value })} />
+                <input
+                  type="text"
+                  className="form-control form-control-sm"
+                  id="address"
+                  placeholder="192.168.168.1 | www.naver.com"
+                  value={this.state.address}
+                  onChange={e => this.setState({ address: e.target.value })}
+                />
               </div>
             </div>
             <div className="form-group row">
-              <label htmlFor="port" className="col-sm-2 col-form-label col-form-label-sm">PORT</label>
+              <label
+                htmlFor="port"
+                className="col-sm-2 col-form-label col-form-label-sm"
+              >
+                PORT
+              </label>
               <div className="col-sm-10">
-                <input type="number" className="form-control form-control-sm" id="port" placeholder="80" value={this.state.port} onChange={(e) => this.setState({ port: e.target.value })} />
+                <input
+                  type="number"
+                  className="form-control form-control-sm"
+                  id="port"
+                  placeholder="80"
+                  value={this.state.port}
+                  onChange={e => this.setState({ port: e.target.value })}
+                />
               </div>
             </div>
             <div className="form-group">
-              <button type="submit" className="btn btn-sm btn-info">ADD</button>
+              <button type="submit" className="btn btn-sm btn-info">
+                ADD
+              </button>
             </div>
           </form>
           <hr />
-          <div className='service-title'>CHECKING LIST</div>
+          <div className="service-title">CHECKING LIST</div>
           <hr />
           <div className="card">
             <ul className="list-group list-group-flush">
-              {
-                chkinfoList.map((v, i) => {
-                  return <CheckInformation
+              {chkinfoList.map((v, i) => {
+                return (
+                  <CheckInformation
                     key={v._id}
                     alias={v.alias}
                     address={v.address}
@@ -233,17 +271,27 @@ export class Service extends Component {
                     onDeleteClick={this.selectDeleteCheckInfo(v._id)}
                     editHandler={this.submitEditCheckInfo(v._id)}
                   />
-                })
-              }
+                );
+              })}
             </ul>
           </div>
         </div>
-        <div className="modal fade" tabIndex="-1" role="dialog" id="delete_confirm_modal">
+        <div
+          className="modal fade"
+          tabIndex="-1"
+          role="dialog"
+          id="delete_confirm_modal"
+        >
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">Check Information Delete</h5>
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                <button
+                  type="button"
+                  className="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
@@ -251,15 +299,28 @@ export class Service extends Component {
                 <p>You really want to delete this check information?</p>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-danger" onClick={this.deleteSelectedCheckInfo} data-dismiss="modal">Delete</button>
-                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={this.deleteSelectedCheckInfo}
+                  data-dismiss="modal"
+                >
+                  Delete
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-dismiss="modal"
+                >
+                  Close
+                </button>
               </div>
             </div>
           </div>
         </div>
-      </div >
-    )
+      </div>
+    );
   }
 }
 
-export default Service
+export default Service;
