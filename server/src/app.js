@@ -55,6 +55,7 @@ if (cluster.isMaster) {
           useNewUrlParser: true,
           useUnifiedTopology: true,
           useCreateIndex: true,
+          useFindAndModify: false,
         }
       );
     } catch (err) {

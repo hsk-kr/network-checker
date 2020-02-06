@@ -176,7 +176,7 @@ export const getUser = async (req, res, next) => {
 
 export const getUsers = async (req, res, next) => {
   try {
-    const count = await User.countDocuments(count);
+    const count = await User.countDocuments();
 
     // obtain filter options.
     let {
@@ -213,10 +213,13 @@ export const getUsers = async (req, res, next) => {
       throw validationError(req.body);
     }
 
-    const users = await User.find(findOptions)
+    const users = await User.find(contextFilter)
       .sort({ [sort]: order })
       .skip(start)
       .limit(end - start);
+
+    res.set('Access-Control-Expose-Headers', 'X-Total-Count');
+    res.set('X-Total-Count', count);
 
     return res.status(200).json(users);
   } catch (err) {

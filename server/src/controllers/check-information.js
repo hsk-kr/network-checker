@@ -191,7 +191,7 @@ export const createCheckInformation = async (req, res, next) => {
 
 export const putCheckInformation = async (req, res, next) => {
   try {
-    const { id } = req.prams;
+    const { id } = req.params;
     const { user_id, alias, address, port, updatedAt, createdAt } = req.body;
 
     if (!user_id || !alias || !address || !port || !updatedAt || !createdAt) {
