@@ -60,25 +60,25 @@ const Home = ({ saveToken, token }) => {
       <div className="home-container">
         <div className="home-intro-area text-white">
           <div className="row justify-content-center">
-            <div className="col-8 text-center">
+            <div className="col-8 text-center animated rubberBand">
               <h1>NETWORK CHECKER</h1>
               <p>We check your networks state for 24/7</p>
             </div>
           </div>
           <div className="row">
-            <div className="col-12 col-sm-12 col-md-4 col-lg-4 text-center mt-100">
+            <div className="col-12 col-sm-12 col-md-4 col-lg-4 text-center mt-100 animated fadeIn">
               <h1>
                 <FontAwesomeIcon icon={faAutoprefixer} />
               </h1>
               <p className="pt-3 icon-desc">Mornitoring 24/7</p>
             </div>
-            <div className="col-12 col-sm-12 col-md-4 col-lg-4 text-center mt-100">
+            <div className="col-12 col-sm-12 col-md-4 col-lg-4 text-center mt-100 animated fadeIn delay-1s">
               <h1>
                 <FontAwesomeIcon icon={faEtsy} />
               </h1>
               <p className="pt-3 icon-desc">Easy to use</p>
             </div>
-            <div className="col-12 col-sm-12 col-md-4 col-lg-4 text-center mt-100">
+            <div className="col-12 col-sm-12 col-md-4 col-lg-4 text-center mt-100 animated fadeIn delay-2s">
               <h1>
                 <FontAwesomeIcon icon={faCartPlus} />
               </h1>

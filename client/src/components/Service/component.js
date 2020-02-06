@@ -16,7 +16,13 @@ const Service = ({ token = getToken() }) => {
 
   useEffect(() => {
     getCheckInfoList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const tmRefresh = setInterval(() => {
+      getCheckInfoList();
+    }, 10000);
+
+    return () => {
+      clearInterval(tmRefresh);
+    };
   }, [token]);
 
   // Vadliate input values of the checking form.
