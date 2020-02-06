@@ -1,39 +1,41 @@
-import React, { useState } from 'react';
-import { formatDate } from '../helper';
+import React, { useState, useCallback } from 'react';
+import PropTypes from 'prop-types';
+import { formatDate } from '../../helpers';
 
-function CheckInformation(props) {
-  const {
-    alias,
-    address,
-    port,
-    state,
-    lastCheckedAt,
-    onDeleteClick,
-    editHandler,
-  } = props;
-
+const CheckInformation = ({
+  alias,
+  address,
+  port,
+  state,
+  lastCheckedAt,
+  onDeleteClick,
+  onEdit,
+}) => {
   const [isEditing, setEdit] = useState(false);
   const [editAlias, setEditAlias] = useState(alias);
   const [editAddress, setEditAddress] = useState(address);
   const [editPort, setEditPort] = useState(port);
 
-  const onEditClick = e => {
+  const handleEdit = useCallback(e => {
     e.preventDefault();
     setEdit(true);
-  };
+  }, []);
 
-  const onCloseEditing = e => {
+  const handleCloseEdit = useCallback(e => {
     e.preventDefault();
     setEdit(false);
-  };
+  }, []);
 
-  const onSubmitEdit = e => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    e => {
+      e.preventDefault();
 
-    if (editHandler(editAlias, editAddress, editPort)) {
-      setEdit(false);
-    }
-  };
+      if (onEdit(editAlias, editAddress, editPort)) {
+        setEdit(false);
+      }
+    },
+    [editAlias, editAddress, editPort, onEdit]
+  );
 
   let html = null;
   if (isEditing) {
@@ -87,10 +89,10 @@ function CheckInformation(props) {
             />
           </div>
         </div>
-        <a href="." onClick={onSubmitEdit} className="card-link">
+        <a href="." onClick={handleSubmit} className="card-link">
           EDIT
         </a>
-        <a href="." onClick={onCloseEditing} className="card-link">
+        <a href="." onClick={handleCloseEdit} className="card-link">
           CANCEL
         </a>
       </li>
@@ -116,7 +118,7 @@ function CheckInformation(props) {
           </h6>
         )}
 
-        <a href="." onClick={onEditClick} className="card-link">
+        <a href="." onClick={handleEdit} className="card-link">
           EDIT
         </a>
         <a
@@ -133,6 +135,16 @@ function CheckInformation(props) {
   }
 
   return html;
-}
+};
+
+CheckInformation.propTypes = {
+  alias: PropTypes.string.isRequired,
+  address: PropTypes.string.isRequired,
+  port: PropTypes.number.isRequired,
+  state: PropTypes.bool.isRequired,
+  lastCheckedAt: PropTypes.string,
+  onDeleteClick: PropTypes.func,
+  onEdit: PropTypes.func,
+};
 
 export default CheckInformation;

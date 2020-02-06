@@ -1,18 +1,14 @@
 import React from 'react';
-import './App.css';
+import './styles.css';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import store from './redux';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route
-} from "react-router-dom";
-import Navbar from './containers/Navbar';
-import Home from "./containers/Home";
-import Service from './containers/Service';
-import Join from './components/Join';
-import MyProfile from './containers/MyProfile';
-import UserInfo from './containers/UserInfo';
+import store from '../../redux';
+import Navbar from '../Navbar';
+import Home from '../Home';
+import Service from '../Service';
+import Join from '../Join';
+import MyProfile from '../MyProfile';
+import UserInfo from '../UserInfo';
 
 function App() {
   return (

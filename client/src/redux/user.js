@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_URL } from '../constants';
+import { API_URL } from '../shared/constants';
 
 // types
 const USER_FETCH_REQUEST = 'USER_FETCH_REQUEST';

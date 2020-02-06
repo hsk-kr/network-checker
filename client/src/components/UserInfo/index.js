@@ -1,21 +1,21 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { fetchUser, deleteToken, saveToken } from '../redux';
-import { getToken } from '../helper';
+import { fetchUser, deleteToken, saveToken } from '../../redux';
+import { getToken } from '../../helpers';
 
 // This component manages token.
-const UserInfo = (props) => {
+const UserInfo = props => {
   const {
     token,
     loading,
     userError,
     fetchUser,
     deleteToken,
-    saveToken
+    saveToken,
   } = props;
 
   /* eslint-disable */
-  // It 
+  // It
   // When refresh the page, it calls fetchUser again.
   // if the page lose the token, It fetches token from localstorage.
   useEffect(() => {
@@ -37,18 +37,18 @@ const UserInfo = (props) => {
   /* eslint-enable */
 
   return <></>;
-}
+};
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   token: state.token.token,
   loading: state.user.loading,
-  userError: state.user.error
+  userError: state.user.error,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  fetchUser: (token) => dispatch(fetchUser(token)),
-  saveToken: (token) => dispatch(saveToken(token)),
-  deleteToken: () => dispatch(deleteToken())
+const mapDispatchToProps = dispatch => ({
+  fetchUser: token => dispatch(fetchUser(token)),
+  saveToken: token => dispatch(saveToken(token)),
+  deleteToken: () => dispatch(deleteToken()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserInfo);
