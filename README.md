@@ -2,7 +2,7 @@
 
 ## How To run
 
-#### Only development
+#### there is no production.
 
 ### Client
 
@@ -46,8 +46,14 @@
     ```
 3. Run
     ```
-    npm run start
+    npm run start:dev
     ```
+
+* Scripts
+  - start:dev - start server with babel-node and nodemon.
+  - build:production - build
+  - start:production - start server
+  - start - build and start server
 
 ### Checker
 
@@ -69,12 +75,11 @@
     - timeout : Timeout
     - delay : Interval
 
-## Skill Stacks
+## Stacks
 
 ### Client
 
 - React
-- Redux
 - Bootstrap 4
 
 ### Admin Page
@@ -88,8 +93,12 @@
 
 ### Checker
 
-- Node.js
+- Typescript
 
 ### Database
 
 - MongoDB
+
+## Preview
+
+![Preview](https://github.com/hsk-kr/network-checker/blob/master/screenshot/preview.gif?raw=true)

@@ -5,9 +5,10 @@ node_modules
 /.pnp
 .pnp.js
 
-# production
+# production or build
 /client/build
 /server/dist
+/checker/dist
 
 # misc
 .DS_Store

@@ -1,34 +1,32 @@
-const net = require('net');
-const Log = require("./log");
-const { setStateOfChkInfo } = require('./db');
+import net from 'net';
+import Log from './log';
+import { setStateOfChkInfo } from './db';
 
-
-const getNewClient = (timeout) => {
+const getNewClient = (timeout: number): void => {
   // returns new socket with events.
-  const createNewSocket = () => {
-    let socket = new net.Socket();
+  const createNewSocket = (): net.Socket => {
+    let socket: net.Socket = new net.Socket();
 
     socket.setTimeout(timeout);
 
-    socket.on('connect', () => {
+    socket.on('connect', (): void => {
       success();
     });
 
-    socket.on('timeout', () => {
+    socket.on('timeout', (): void => {
       fail();
     });
 
-    socket.on('error', (err) => {
+    socket.on('error', (): void => {
       fail();
     });
 
-    socket.on('close', () => {
-    });
+    socket.on('close', (): void => {});
 
     return socket;
-  }
+  };
 
-  let socket = createNewSocket();
+  let socket: any = createNewSocket();
 
   // connect to a next session.
   const connect = () => {
@@ -37,13 +35,13 @@ const getNewClient = (timeout) => {
     }
 
     if (socket.customObject.list.length > 0) {
-      const chkinfo = socket.customObject.list.pop();
+      const chkinfo: any = socket.customObject.list.pop();
 
-      const customObject = {
+      const customObject: object = {
         list: socket.customObject.list,
         chkinfo,
-        callback: socket.customObject.callback
-      }
+        callback: socket.customObject.callback,
+      };
 
       socket = createNewSocket();
       socket.customObject = customObject;
@@ -59,7 +57,7 @@ const getNewClient = (timeout) => {
 
   // when it's success to connect
   const success = () => {
-    const chkinfo = socket.customObject.chkinfo;
+    const chkinfo: any = socket.customObject.chkinfo;
 
     Log(`${chkinfo.address}:${chkinfo.port} success to connect.`);
     socket.destroy();
@@ -69,7 +67,7 @@ const getNewClient = (timeout) => {
 
   // when it's fail to connect
   const fail = () => {
-    const chkinfo = socket.customObject.chkinfo;
+    const chkinfo: any = socket.customObject.chkinfo;
 
     Log(`${chkinfo.address}:${chkinfo.port} fail to connect.`);
     socket.destroy();
@@ -78,11 +76,16 @@ const getNewClient = (timeout) => {
   };
 
   return socket;
-}
+};
 
 // when it finish connecting all of connections, It calls the callback.
-const startChecking = (socketCount, timeout, checkList, callback) => {
-  const sockets = [];
+const startChecking = (
+  socketCount: number,
+  timeout: number,
+  checkList: Array<any>,
+  callback: Function
+) => {
+  const sockets: Array<any> = [];
 
   for (let i = 0; i < socketCount; i++) {
     if (checkList.length > 0) {
@@ -93,7 +96,7 @@ const startChecking = (socketCount, timeout, checkList, callback) => {
       sockets[i].customObject = {
         list: checkList,
         chkinfo,
-        callback: callback
+        callback: callback,
       };
 
       sockets[i].connect({
@@ -106,4 +109,4 @@ const startChecking = (socketCount, timeout, checkList, callback) => {
   }
 };
 
-module.exports = startChecking;
+export default startChecking;

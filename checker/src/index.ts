@@ -1,28 +1,29 @@
-const { findAllChkInfo } = require('./db');
-const networkChecker = require('./network-checker');
-const Log = require('./log');
+import { findAllChkInfo } from './db';
+import networkChecker from './network-checker';
+import Log from './log';
 
 // setting variables
-let socketCount = 10;
-let timeout = 1000;
-let delay = 10000;
+let socketCount: number = 10;
+let timeout: number = 1000;
+let delay: number = 10000;
 
-const argv = process.argv.slice(2);
+const argv: Array<string> = process.argv.slice(2);
 
 // Parse arguments and set up setting variables.
-for (let i = 0; i < argv; i += 2) {
-  const name = argv[i];
+for (let i: number = 0; i < argv.length; i += 2) {
+  const name: string = argv[i];
   if (i + 1 >= argv.length) {
     console.error("you must've called pair arguments.");
-    return;
+    process.exit(1);
   }
 
-  let value = argv[i + 1];
-  if (isNaN(value)) {
+  let value: number = 0;
+  try {
+    value = Number(argv[i + 1]);
+  } catch {
     console.error("value must've been number.");
     continue;
   }
-  value = Number(value);
 
   switch (name) {
     case 'socket-count':
@@ -37,7 +38,8 @@ for (let i = 0; i < argv; i += 2) {
   }
 }
 
-let waiting = false;
+let waiting: boolean = false;
+
 // This must be called only once.
 const check = () => {
   waiting = false;
@@ -45,7 +47,7 @@ const check = () => {
     networkChecker(socketCount, timeout, docs, () => {
       if (!waiting) {
         waiting = true;
-        Log('It\'s been finished checking all of connections.');
+        Log("It's been finished checking all of connections.");
         Log(`It's going to restart after ${delay}`);
 
         setTimeout(check, delay);
