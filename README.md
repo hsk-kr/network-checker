@@ -8,7 +8,7 @@ The code is only for development environment.
 
 - MongoDB
 
-_If you have a docker, you can simply create an instance with this command_
+_If you have docker, you can simply create an instance with this command_
 
 ```bash
 docker run --name some-mongo -p 27017:27017 -d mongo:latest
