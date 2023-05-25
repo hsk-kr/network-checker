@@ -26,7 +26,7 @@ docker run --name some-mongo -p 27017:27017 -d mongo:latest
    ```
 3. Run
    ```
-   npm run start
+   npm run dev
    ```
 
 ### Admin Page
