@@ -66,7 +66,7 @@ const Service = ({ token = getToken() }) => {
     }
   }, [token]);
 
-  const submitAddingCheckInfo = async e => {
+  const submitAddingCheckInfo = async (e) => {
     e.preventDefault();
 
     if (!validateCheckingForm(alias, address, port)) {
@@ -125,7 +125,7 @@ const Service = ({ token = getToken() }) => {
 
   // select check information for deleting.
   // It's used for callback function of CheckInfomration component.
-  const selectDeleteCheckInfo = useCallback(_id => {
+  const selectDeleteCheckInfo = useCallback((_id) => {
     return () => {
       setDeleteCheckInfoId(_id);
     };
@@ -134,7 +134,7 @@ const Service = ({ token = getToken() }) => {
   // It returns request successfully otherwise returns false.
   // It's used for callback function of CheckIfnormation component.
   const submitEditCheckInfo = useCallback(
-    _id => {
+    (_id) => {
       return async (alias, address, port) => {
         if (!validateCheckingForm(alias, address, port)) {
           return false;
@@ -188,7 +188,7 @@ const Service = ({ token = getToken() }) => {
                 id="alias"
                 placeholder="MY SERVER"
                 value={alias}
-                onChange={e => setAlias(e.target.value)}
+                onChange={(e) => setAlias(e.target.value)}
               />
             </div>
           </div>
@@ -206,7 +206,7 @@ const Service = ({ token = getToken() }) => {
                 id="address"
                 placeholder="192.168.168.1 | www.naver.com"
                 value={address}
-                onChange={e => setAddress(e.target.value)}
+                onChange={(e) => setAddress(e.target.value)}
               />
             </div>
           </div>
@@ -224,7 +224,7 @@ const Service = ({ token = getToken() }) => {
                 id="port"
                 placeholder="80"
                 value={port}
-                onChange={e => setPort(e.target.value)}
+                onChange={(e) => setPort(e.target.value)}
               />
             </div>
           </div>

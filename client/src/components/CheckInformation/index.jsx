@@ -16,18 +16,18 @@ const CheckInformation = ({
   const [editAddress, setEditAddress] = useState(address);
   const [editPort, setEditPort] = useState(port);
 
-  const handleEdit = useCallback(e => {
+  const handleEdit = useCallback((e) => {
     e.preventDefault();
     setEdit(true);
   }, []);
 
-  const handleCloseEdit = useCallback(e => {
+  const handleCloseEdit = useCallback((e) => {
     e.preventDefault();
     setEdit(false);
   }, []);
 
   const handleSubmit = useCallback(
-    e => {
+    (e) => {
       e.preventDefault();
 
       if (onEdit(editAlias, editAddress, editPort)) {
@@ -55,7 +55,7 @@ const CheckInformation = ({
               className="form-control form-control-sm"
               id="alias"
               value={editAlias}
-              onChange={e => setEditAlias(e.target.value)}
+              onChange={(e) => setEditAlias(e.target.value)}
             />
           </div>
           <label
@@ -70,7 +70,7 @@ const CheckInformation = ({
               className="form-control form-control-sm"
               id="address"
               value={editAddress}
-              onChange={e => setEditAddress(e.target.value)}
+              onChange={(e) => setEditAddress(e.target.value)}
             />
           </div>
           <label
@@ -85,7 +85,7 @@ const CheckInformation = ({
               className="form-control form-control-sm"
               id="port"
               value={editPort}
-              onChange={e => setEditPort(e.target.value)}
+              onChange={(e) => setEditPort(e.target.value)}
             />
           </div>
         </div>
@@ -108,28 +108,6 @@ const CheckInformation = ({
             <span className="badge badge-danger">OFF</span>
           )}
         </h5>
-        {lastCheckedAt ? (
-          <h6 className="card-subtitle mb-2 text-muted">
-            Last checked date: <span>{formatDate(lastCheckedAt)}</span>
-          </h6>
-        ) : (
-          <h6 className="card-subtitle mb-2 text-muted">
-            It hasn't been checked by checker yet.
-          </h6>
-        )}
-
-        <a href="." onClick={handleEdit} className="card-link">
-          EDIT
-        </a>
-        <a
-          href="."
-          onClick={onDeleteClick}
-          className="card-link"
-          data-toggle="modal"
-          data-target="#delete_confirm_modal"
-        >
-          DELETE
-        </a>
       </li>
     );
   }

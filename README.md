@@ -1,55 +1,65 @@
 # Network Checker
 
+The code is only for development environment.
+
 ## How To run
 
-#### there is no production.
+### Prerequisite
+
+- MongoDB
+
+_If you have a docker, you can simply create an instance with this command_
+
+```bash
+docker run --name some-mongo -p 27017:27017 -d mongo:latest
+```
 
 ### Client
 
 1. Move to client directory.
-    ```
-    cd client
-    ```
+   ```
+   cd client
+   ```
 2. Install packages
-    ```
-    npm install
-    ```
+   ```
+   npm install
+   ```
 3. Run
-    ```
-    npm run start
-    ```
+   ```
+   npm run start
+   ```
 
 ### Admin Page
 
 1. Move to admin-page directory.
-    ```
-    cd client
-    ```
+   ```
+   cd client
+   ```
 2. Install packages
-    ```
-    npm install
-    ```
+   ```
+   npm install
+   ```
 3. Run
-    ```
-    npm run start
-    ```
+   ```
+   npm run start
+   ```
 
 ### Server
 
 1. Move to server directory.
-    ```
-    cd server
-    ```
+   ```
+   cd server
+   ```
 2. Install packages
-    ```
-    npm install
-    ```
+   ```
+   npm install
+   ```
 3. Run
-    ```
-    npm run start:dev
-    ```
+   ```
+   npm run start:dev
+   ```
 
-* Scripts
+- Scripts
   - start:dev - start server with babel-node and nodemon.
   - build:production - build
   - start:production - start server
@@ -58,22 +68,22 @@
 ### Checker
 
 1. Move to a client directory.
-    ```
-    cd checker
-    ```
+   ```
+   cd checker
+   ```
 2. Install packages
-    ```
-    npm install
-    ```
+   ```
+   npm install
+   ```
 3. Run
-    ```
-    npm run start [socket-count | timeout | delay]
-    ```
+   ```
+   npm run start [socket-count | timeout | delay]
+   ```
 
-* Command Options
-    - socket-count : How many sockets you use
-    - timeout : Timeout
-    - delay : Interval
+- Command Options
+  - socket-count : How many sockets you use
+  - timeout : Timeout
+  - delay : Interval
 
 ## Stacks
 

@@ -1,4 +1,3 @@
-import localStorage from 'localStorage';
 import { LS_TOKEN } from '../shared/constants';
 
 // types
@@ -6,7 +5,7 @@ const TOKEN_SAVE = 'TOKEN_SAVE';
 const TOKEN_DELETE = 'TOKEN_DELETE';
 
 // actions
-export const saveToken = token => {
+export const saveToken = (token) => {
   localStorage.setItem(LS_TOKEN, token);
 
   return {

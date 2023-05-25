@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import os from 'os';
-import cluster from 'cluster';
+import cluster from 'node:cluster';
 import * as dotenv from 'dotenv';
 import routes from './routes';
 import { handleError } from './middlewares';
@@ -27,7 +27,7 @@ app.use(routes);
 // handle errors
 app.use(handleError);
 
-if (cluster.isMaster) {
+if (cluster.isPrimary) {
   const numCPUs = os.cpus().length;
 
   // fork clusters as many as cpus
@@ -35,7 +35,7 @@ if (cluster.isMaster) {
     cluster.fork();
   }
 
-  cluster.on('online', worker => {
+  cluster.on('online', (worker) => {
     console.log(`Worker ${worker.process.pid} up`);
   });
 
