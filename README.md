@@ -60,14 +60,14 @@ docker run --name some-mongo -p 27017:27017 -d mongo:latest
    ```
 
 - Scripts
-  - start:dev - start server with babel-node and nodemon.
+  - start:dev - start server dev server which detects file changed automatically and restarts.
   - build:production - build
-  - start:production - start server
-  - start - build and start server
+  - start:production - start server in production mode
+  - start - build and start server in production mode
 
 ### Checker
 
-1. Move to a client directory.
+1. Move to checker directory.
    ```
    cd checker
    ```
@@ -82,8 +82,8 @@ docker run --name some-mongo -p 27017:27017 -d mongo:latest
 
 - Command Options
   - socket-count : How many sockets you use
-  - timeout : Timeout
-  - delay : Interval
+  - timeout : How long a socket waits to response from an endpoint until it decides timeout
+  - delay : Interval time to check network connections
 
 ## Stacks
 
